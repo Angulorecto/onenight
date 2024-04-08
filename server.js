@@ -1,12 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const path = require('path');
 const PORT = 3000;
 
 app.use(bodyParser.json());
 
 let nextRoomId = 1;
 const rooms = {};
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.post('/createRoom', (req, res) => {
   const roomId = nextRoomId++;
