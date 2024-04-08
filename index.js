@@ -7,6 +7,6 @@ function hostRoom() {
   
 }
 
-if ((localStorage.getItem("ingame") == false) or (localStorage.getItem("ingame") == null)) {
+if ((localStorage.getItem("ingame") == false) or (localStorage.getItem("ingame") === null)) {
   newStyle("styles/index.css");
 }
