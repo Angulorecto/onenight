@@ -20,7 +20,7 @@ body {
   position: relative;
   width: 90%;
   height: 10%;
-  top: 5%;
+  bottom: 100%;
   left: 5%;
   border: none;
 }
