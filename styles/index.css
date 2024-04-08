@@ -7,7 +7,6 @@ body {
   left: 35%;
   width: 30%;
   height: 70%;
-  margin: auto;
   background-color: #FFFFFF;
 }
 .joinSubmit {
@@ -15,4 +14,6 @@ body {
   color: #FFFFFF;
   position: relative;
   bottom: 10%;
+  width: 90%;
+  left: 5%;
 }
