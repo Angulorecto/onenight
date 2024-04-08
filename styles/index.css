@@ -10,6 +10,7 @@ body {
   background-color: #FFFFFF;
 }
 .joinSubmit {
+  font-size: 10%;
   border-radius: 30%;
   background-color: #151515;
   color: #FFFFFF;
