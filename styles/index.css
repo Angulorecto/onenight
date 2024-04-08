@@ -11,6 +11,11 @@ body {
 .joinForm {
   height: 100%;
 }
+.joinLabel {
+  position: relative;
+  top: 40%;
+  color: #FFFFFF;
+}
 .joinInput {
   font-size: 150%;
   border-radius: 30px;
