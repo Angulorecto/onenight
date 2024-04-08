@@ -1,3 +1,8 @@
 body {
   background-image: radial-gradient(#000000, #101010);
 }
+.index {
+  width: 100px;
+  margin: auto;
+  background-color: #FFFFFF;
+}
