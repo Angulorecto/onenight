@@ -13,7 +13,8 @@ body {
 }
 .joinLabel {
   position: relative;
-  top: 40%;
+  top: 80%;
+  font-size: 150%;
   color: #FFFFFF;
 }
 .joinInput {
