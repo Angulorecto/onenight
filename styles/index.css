@@ -8,6 +8,10 @@ body {
   width: 30%;
   height: 70%;
 }
+.joinForm {
+  height: 100%;
+  background-color: #FFFFFF;
+}
 .joinSubmit {
   font-size: 150%;
   border-radius: 30px;
