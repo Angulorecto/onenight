@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 0 }));
 
 // Route for the root URL ("/") to serve the HTML file
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.post('/createRoom', (req, res) => {
