@@ -10,3 +10,9 @@ body {
   margin: auto;
   background-color: #FFFFFF;
 }
+.joinSubmit {
+  border-radius: 20%;
+  color: #FFFFFF;
+  position: relative;
+  bottom: 10%;
+}
