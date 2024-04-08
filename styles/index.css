@@ -41,6 +41,7 @@ body {
   top: 65%;
   left: 5%;
   border: none;
+  text-align: center;
 }
 .joinSubmit {
   font-size: 150%;
