@@ -9,6 +9,10 @@ app.use(bodyParser.json());
 let nextRoomId = 1;
 const rooms = {};
 
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname)));
+
+// Route for the root URL ("/") to serve the HTML file
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
