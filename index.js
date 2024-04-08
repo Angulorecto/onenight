@@ -8,8 +8,41 @@ function newStyle(styleurl) {
   style.href = styleurl;
   document.getElementsByTagName("head")[0].appendChild(style);
 }
-function hostRoom() {
-  
+
+async function hostRoom() {
+  try {
+    const response = await fetch('/createRoom', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const { roomCode } = await response.json();
+    alert(`Your room code is: ${roomCode}`);
+  } catch (error) {
+    console.error('Error creating room:', error);
+  }
+}
+
+async function joinRoom(event) {
+  event.preventDefault();
+  const code = document.getElementById('code').value;
+  try {
+    const response = await fetch(`/joinRoom/${code}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    if (data.success) {
+      alert('Joined room successfully!');
+    } else {
+      alert('Failed to join room. Please check the room code and try again.');
+    }
+  } catch (error) {
+    console.error('Error joining room:', error);
+  }
 }
 
 if (document.getElementById("style")) {
