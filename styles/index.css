@@ -11,6 +11,18 @@ body {
 .joinForm {
   height: 100%;
 }
+.joinInput {
+  font-size: 150%;
+  border-radius: 30px;
+  background-color: #151515;
+  color: #FFFFFF;
+  position: relative;
+  width: 90%;
+  height: 10%;
+  top: 60%;
+  left: 5%;
+  border: none;
+}
 .joinSubmit {
   font-size: 150%;
   border-radius: 30px;
