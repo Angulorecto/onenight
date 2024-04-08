@@ -11,7 +11,7 @@ body {
 }
 .joinSubmit {
   font-size: 150%;
-  border-radius: 30%;
+  border-radius: 30px;
   background-color: #151515;
   color: #FFFFFF;
   position: relative;
