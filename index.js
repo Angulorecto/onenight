@@ -13,5 +13,7 @@ function hostRoom() {
 }
 
 if (document.getElementById("style")) {
-  newStyle('styles/index.css')
+  console.log('Stylesheet exists!');
+} else {
+  newStyle('styles/index.css');
 }
