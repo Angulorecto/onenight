@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
+import cheerio from 'cheerio';
 const PORT = 3000;
 
 app.use(bodyParser.json());
@@ -18,7 +19,23 @@ app.get('/', (req, res) => {
 });
 
 app.get('/host', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'host.html'));
+  const code = localStorage.getItem("code");
+
+  const filePath = path.join(__dirname, 'public', 'index.html');
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading file:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    const $ = cheerio.load(data);
+
+    $('body').append(`<script>document.getElementById("log").innerHTML = "${buttonText}"; document.getElementById("log").href = "${buttonLink}";</script>`);
+
+    res.send($.html());
+  });
 });
 
 app.post('/createRoom', (req, res) => {
