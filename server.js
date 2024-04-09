@@ -17,6 +17,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/host', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'host.html'));
+});
+
 app.post('/createRoom', (req, res) => {
   const roomId = nextRoomId++;
   const roomCode = generateRoomCode();
