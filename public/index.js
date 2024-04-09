@@ -18,7 +18,8 @@ async function hostRoom() {
       }
     });
     const { roomCode } = await response.json();
-    alert(`Your room code is: ${roomCode}`);
+    localStorage.setItem("code", `${roomCode}`);
+    newStyle('styles/hostRoom.css');
   } catch (error) {
     console.error('Error creating room:', error);
   }
