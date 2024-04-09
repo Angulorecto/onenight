@@ -19,7 +19,7 @@ async function hostRoom() {
     });
     const { roomCode } = await response.json();
     localStorage.setItem("code", `${roomCode}`);
-    newStyle('styles/hostRoom.css');
+    window.location.href = "/host";
   } catch (error) {
     console.error('Error creating room:', error);
   }

@@ -5,21 +5,3 @@ body {
     font-size: 50px;
     text-align: center;
 }
-.index {
-    display: none;
-  }
-  .hostRoom {
-    display: none;
-  }
-  .joinForm {
-    display: none;
-  }
-  .joinLabel {
-    display: none;
-  }
-  .joinInput {
-    display: none;
-  }
-  .joinSubmit {
-    display: none;
-  }
