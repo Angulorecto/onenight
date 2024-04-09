@@ -2,6 +2,10 @@ function loadHost() {
   document.getElementById("code").innerHTML = localStorage.getItem("code");
 }
 
+function setName() {
+  document.getElementById("name").value
+}
+
 async function hostRoom() {
   try {
     const response = await fetch('/createRoom', {
