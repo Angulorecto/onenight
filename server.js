@@ -32,7 +32,7 @@ app.get('/host', (req, res) => {
 
     const $ = cheerio.load(data);
 
-    $('body').append(`<script>document.getElementById("log").innerHTML = "${buttonText}"; document.getElementById("log").href = "${buttonLink}";</script>`);
+    $('body').append(`<script>document.getElementById("code").innerHTML = "${code}";</script>`);
 
     res.send($.html());
   });
