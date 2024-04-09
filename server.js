@@ -21,6 +21,10 @@ app.get('/host', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'host.html'));
 });
 
+app.get('/room', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'room.html'));
+});
+
 app.post('/createRoom', (req, res) => {
   const roomId = nextRoomId++;
   const roomCode = generateRoomCode();
@@ -40,7 +44,7 @@ app.post('/joinRoom/:code', (req, res) => {
 
 function generateRoomCode() {
   // Generate a random 6-character alphanumeric room code
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
   let code = '';
   for (let i = 0; i < 6; i++) {
     code += chars.charAt(Math.floor(Math.random() * chars.length));

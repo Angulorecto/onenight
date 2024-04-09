@@ -1,10 +1,11 @@
 @import url('fonts.css');
 body {
-    background-image: radial-gradient(#000000, #101010);
+    background-image: radial-gradient(circle, #000000, #101010);
 }
 #code {
     font-size: 500%;
     text-align: center;
     color: #FFFFFF;
     font-family: 'wolf';
+    letter-spacing: 15px;
 }

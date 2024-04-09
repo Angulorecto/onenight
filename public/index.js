@@ -30,7 +30,7 @@ async function joinRoom(event) {
     });
     const data = await response.json();
     if (data.success) {
-      alert('Joined room successfully!');
+      window.location.href = "/room";
     } else {
       alert('Failed to join room. Please check the room code and try again.');
     }
