@@ -10,7 +10,7 @@ function loadHost() {
   const playersDiv = document.querySelector(".players");
   playersDiv.appendChild(playerNameElement);
 
-  updatePlayerNameElement();
+  setInterval(updatePlayerNameElement, 500);
 
   // Remove the player's name when the player leaves the room
   window.addEventListener("beforeunload", () => {
@@ -60,22 +60,6 @@ function setName(event) {
   document.getElementsByClassName("index")[0].style.animation = "0.5s fadeOut forwards";
 }
 
-async function sendPlayerNameToHost(playerName, roomCode) {
-  try {
-    const response = await fetch(`/sendPlayerName/${roomCode}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ playerName })
-    });
-    const data = await response.json();
-    // Handle response as needed
-  } catch (error) {
-    console.error('Error sending player name to host:', error);
-  }
-}
-
 function checkHome() {
   const referrer = document.referrer;
   
@@ -94,38 +78,47 @@ function checkHome() {
   }
 }
 
-async function updatePlayerNameElement() {
+function updatePlayerNameElement() {
   const roomCode = localStorage.getItem("code");
-  
-  try {
-    const response = await fetch(`/getPlayers/${roomCode}`);
-    const data = await response.json();
+  const playerId = localStorage.getItem("playerId");
 
-    const playerNameElement = document.getElementById("playersList");
-    playerNameElement.innerHTML = ""; // Clear the previous list of players
+  fetch(`/getPlayers/${roomCode}`)
+    .then(response => response.json())
+    .then(data => {
+      const playerNameElement = document.getElementById("playerName");
+      playerNameElement.textContent = `Name: ${localStorage.getItem("name")} | ID: ${playerId}`;
 
-    data.players.forEach(player => {
-      const playerElement = document.createElement("p");
-      playerElement.textContent = player;
-      
-      playerNameElement.appendChild(playerElement);
+      const playersListElement = document.getElementById("playersList");
+      playersListElement.innerHTML = "";
+
+      data.players.forEach(player => {
+        const playerElement = document.createElement("p");
+        playerElement.textContent = `Name: ${player.name} | ID: ${player.id}`;
+        playersListElement.appendChild(playerElement);
+      });
+    })
+    .catch(error => {
+      console.error('Error updating player names:', error);
     });
-  } catch (error) {
-    console.error('Error updating player names:', error);
-  }
 }
 
-function loadHost() {
-  document.getElementById("code").innerHTML = localStorage.getItem("code");
-  checkHome();
-
-  const playerNameElement = document.createElement("p");
-  playerNameElement.id = "playerName";
-  
-  const playersDiv = document.querySelector(".players");
-  playersDiv.appendChild(playerNameElement);
-
-  updatePlayerNameElement(); // Call the updatePlayerNameElement function
+function sendPlayerNameToHost(playerName, roomCode) {
+  fetch(`/sendPlayerName/${roomCode}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ playerName })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        localStorage.setItem("playerId", data.playerId);
+      }
+    })
+    .catch(error => {
+      console.error('Error sending player name to host:', error);
+    });
 }
 
 async function hostRoom() {

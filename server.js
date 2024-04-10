@@ -8,12 +8,11 @@ app.use(bodyParser.json());
 
 let nextRoomId = 1;
 
-// Store rooms as a property of the app object
 app.locals.rooms = {};
 
-// Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 0 }));
 
+// Routes for serving HTML files
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -26,6 +25,7 @@ app.get('/room', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'room.html'));
 });
 
+// Create a new room and generate a room code
 app.post('/createRoom', (req, res) => {
   const roomId = nextRoomId++;
   const roomCode = generateRoomCode();
@@ -33,53 +33,34 @@ app.post('/createRoom', (req, res) => {
   res.json({ roomCode });
 });
 
+// Join a room with a specific code
 app.post('/joinRoom/:code', (req, res) => {
   const { code } = req.params;
   if (app.locals.rooms[code]) {
-    // Add logic to join the room (e.g., add player to room)
-    res.json({ success: true });
+    const { playerName } = req.body;
+    addPlayerToRoom(code, playerName);
+    res.json({ success: true, playerId: app.locals.rooms[code].players[app.locals.rooms[code].players.length - 1].id });
   } else {
     res.json({ success: false });
   }
 });
 
-app.post('/sendPlayerName/:code', (req, res) => {
-  const { code } = req.params;
-  const { playerName } = req.body;
-
-  if (app.locals.rooms[code]) {
-      app.locals.rooms[code].players.push(playerName); // Store player's name in the room
-      res.json({ success: true });
-  } else {
-      res.json({ success: false });
-  }
-});
-
-app.get('/getPlayers/:code', (req, res) => {
-  const { code } = req.params; // Retrieve the room code from the request parameters
-
-  const playersInRoom = getPlayersFromRoom(code); // Implement a function to get the list of players in the room based on the room code
-
-  res.json({ players: playersInRoom });
-});
-
-// Function to get the list of players in a room based on the room code
-function getPlayersFromRoom(code) {
-  const room = app.locals.rooms[code];
-  if (room) {
-    return room.players;
-  }
-  return [];
-}
-
 function generateRoomCode() {
-  // Generate a random 6-character alphanumeric room code
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
   let code = '';
   for (let i = 0; i < 6; i++) {
     code += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return code;
+}
+
+function generatePlayerId() {
+  return Math.random().toString(36).substr(2, 9);
+}
+
+function addPlayerToRoom(roomCode, playerName) {
+  const player = { id: generatePlayerId(), name: playerName };
+  app.locals.rooms[roomCode].players.push(player);
 }
 
 app.listen(PORT, () => {
