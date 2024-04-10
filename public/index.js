@@ -1,16 +1,79 @@
 function loadHost() {
-  document.getElementById("code").innerHTML = localStorage.getItem("code");
+  const code = localStorage.getItem("code");
+
+  document.getElementById("code").innerHTML = code;
   checkHome();
+
+  const playerNameElement = document.createElement("p");
+  playerNameElement.id = "playerName";
+  
+  const playersDiv = document.querySelector(".players");
+  playersDiv.appendChild(playerNameElement);
+
+  updatePlayerNameElement();
+
+  // Remove the player's name when the player leaves the room
+  window.addEventListener("beforeunload", () => {
+      localStorage.removeItem(`${code}-name`);
+  });
+}
+
+function removePlayerFromRoom() {
+  const roomCode = localStorage.getItem("code");
+  const playerName = localStorage.getItem(`${roomCode}-name`);
+  
+  localStorage.removeItem(`${roomCode}-name`); // Remove the player's name from localStorage
+
+  // Send a request to the server to remove the player from the room
+  fetch(`/removePlayer/${roomCode}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ playerName })
+  })
+  .then(response => {
+    // Handle response as needed
+  })
+  .catch(error => {
+    console.error('Error removing player from room:', error);
+  });
 }
 
 function loadHome() {
+  removePlayerFromRoom(); // Call the function to remove player from the room
   localStorage.removeItem("code");
 }
 
 function setName(event) {
   event.preventDefault();
-  localStorage.setItem("name", document.getElementById("name").value);
+  const playerName = document.getElementById("name").value;
+  localStorage.setItem("name", playerName);
+  const roomCode = localStorage.getItem("code"); // Get the room code from localStorage
+
+  // Set the player's name in localStorage with the room code as part of the key
+  localStorage.setItem(`${roomCode}-name`, playerName);
+
+  // Send the player's name to the host of the room
+  sendPlayerNameToHost(playerName, roomCode);
+
   document.getElementsByClassName("index")[0].style.animation = "0.5s fadeOut forwards";
+}
+
+async function sendPlayerNameToHost(playerName, roomCode) {
+  try {
+    const response = await fetch(`/sendPlayerName/${roomCode}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ playerName })
+    });
+    const data = await response.json();
+    // Handle response as needed
+  } catch (error) {
+    console.error('Error sending player name to host:', error);
+  }
 }
 
 function checkHome() {
@@ -29,6 +92,40 @@ function checkHome() {
     // user did not come from '/' 
     window.location.href = "/";
   }
+}
+
+async function updatePlayerNameElement() {
+  const roomCode = localStorage.getItem("code");
+  
+  try {
+    const response = await fetch(`/getPlayers/${roomCode}`);
+    const data = await response.json();
+
+    const playerNameElement = document.getElementById("playersList");
+    playerNameElement.innerHTML = ""; // Clear the previous list of players
+
+    data.players.forEach(player => {
+      const playerElement = document.createElement("p");
+      playerElement.textContent = player;
+      
+      playerNameElement.appendChild(playerElement);
+    });
+  } catch (error) {
+    console.error('Error updating player names:', error);
+  }
+}
+
+function loadHost() {
+  document.getElementById("code").innerHTML = localStorage.getItem("code");
+  checkHome();
+
+  const playerNameElement = document.createElement("p");
+  playerNameElement.id = "playerName";
+  
+  const playersDiv = document.querySelector(".players");
+  playersDiv.appendChild(playerNameElement);
+
+  updatePlayerNameElement(); // Call the updatePlayerNameElement function
 }
 
 async function hostRoom() {

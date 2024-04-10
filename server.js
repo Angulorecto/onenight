@@ -43,6 +43,35 @@ app.post('/joinRoom/:code', (req, res) => {
   }
 });
 
+app.post('/sendPlayerName/:code', (req, res) => {
+  const { code } = req.params;
+  const { playerName } = req.body;
+
+  if (app.locals.rooms[code]) {
+      app.locals.rooms[code].players.push(playerName); // Store player's name in the room
+      res.json({ success: true });
+  } else {
+      res.json({ success: false });
+  }
+});
+
+app.get('/getPlayers/:code', (req, res) => {
+  const { code } = req.params; // Retrieve the room code from the request parameters
+
+  const playersInRoom = getPlayersFromRoom(code); // Implement a function to get the list of players in the room based on the room code
+
+  res.json({ players: playersInRoom });
+});
+
+// Function to get the list of players in a room based on the room code
+function getPlayersFromRoom(code) {
+  const room = app.locals.rooms[code];
+  if (room) {
+    return room.players;
+  }
+  return [];
+}
+
 function generateRoomCode() {
   // Generate a random 6-character alphanumeric room code
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
