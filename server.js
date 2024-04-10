@@ -7,7 +7,9 @@ const PORT = 3000;
 app.use(bodyParser.json());
 
 let nextRoomId = 1;
-const rooms = {};
+
+// Store rooms as a property of the app object
+app.locals.rooms = {};
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 0 }));
@@ -27,13 +29,13 @@ app.get('/room', (req, res) => {
 app.post('/createRoom', (req, res) => {
   const roomId = nextRoomId++;
   const roomCode = generateRoomCode();
-  rooms[roomCode] = { id: roomId, players: [] };
+  app.locals.rooms[roomCode] = { id: roomId, players: [] };
   res.json({ roomCode });
 });
 
 app.post('/joinRoom/:code', (req, res) => {
   const { code } = req.params;
-  if (rooms[code]) {
+  if (app.locals.rooms[code]) {
     // Add logic to join the room (e.g., add player to room)
     res.json({ success: true });
   } else {
