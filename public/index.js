@@ -1,9 +1,34 @@
 function loadHost() {
   document.getElementById("code").innerHTML = localStorage.getItem("code");
+  checkHome();
 }
 
-function setName() {
-  document.getElementById("name").value
+function loadHome() {
+  localStorage.removeItem("code");
+}
+
+function setName(event) {
+  event.preventDefault();
+  localStorage.setItem("name", document.getElementById("name").value);
+  document.getElementsByClassName("index")[0].style.animation = "0.5s fadeOut forwards";
+}
+
+function checkHome() {
+  const referrer = document.referrer;
+  
+  if (referrer.endsWith("/")) {
+    // user came from '/'
+    if (window.location.pathname == "/room") {
+      document.getElementById("name").value = localStorage.getItem("name");
+    } else {
+      return
+    }
+    
+    // Perform whatever action you want here for users coming from '/door'
+  } else {
+    // user did not come from '/' 
+    window.location.href = "/";
+  }
 }
 
 async function hostRoom() {
@@ -41,10 +66,4 @@ async function joinRoom(event) {
   } catch (error) {
     console.error('Error joining room:', error);
   }
-}
-
-if (document.getElementById("style")) {
-  console.log('Stylesheet exists!');
-} else {
-  newStyle('styles/index.css');
 }
