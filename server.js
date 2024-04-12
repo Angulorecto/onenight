@@ -14,7 +14,16 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 0 }));
 
 // Routes for serving HTML files
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  const userAgent = req.headers['user-agent'];
+    const isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+
+    // Change stylesheet settings based on the result
+    if (isMobile) {
+      // For example, send a different HTML file for mobile devices
+      res.sendFile(path.join(__dirname, 'public', 'mobileIndex.html'));
+    } else {
+      res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    }
 });
 
 app.get('/host', (req, res) => {
