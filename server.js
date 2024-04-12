@@ -1,32 +1,50 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
 const path = require('path');
+const bodyParser = require('body-parser');
 const PORT = 3000;
 
 app.use(bodyParser.json());
 
-let nextRoomId = 1;
-
-app.locals.rooms = {};
+const globalRoomCodes = new Set();
 
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 0 }));
 
 // Routes for serving HTML files
 app.get('/', (req, res) => {
   const userAgent = req.headers['user-agent'];
-    const isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-
-    // Change stylesheet settings based on the result
-    if (isMobile) {
-      // For example, send a different HTML file for mobile devices
-      res.sendFile(path.join(__dirname, 'public', 'mobileIndex.html'));
-    } else {
-      res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    }
+  const isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+  // Change stylesheet settings based on the result
+  if (isMobile) {
+    // For example, send a different HTML file for mobile devices
+    res.sendFile(path.join(__dirname, 'public', 'mobileIndex.html'));
+  } else {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  }
 });
 
-app.get('/host', (req, res) => {
+io.on("connection", (socket) => {
+  socket.on("create room", () => {
+    const roomCode = generateRoomCode();
+    globalRoomCodes.add(roomCode);
+    
+    socket.emit("room code", roomCode);
+  });
+});
+
+function generateRoomCode() {
+  let roomCode;
+  do {
+    roomCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit room code
+  } while (globalRoomCodes.has(roomCode));
+  
+  return roomCode;
+}
+
+app.get("/host", (req, res) => {
+  const hostRoomCode = req.query.code;
   res.sendFile(path.join(__dirname, 'public', 'host.html'));
 });
 

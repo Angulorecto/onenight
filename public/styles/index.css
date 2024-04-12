@@ -9,7 +9,7 @@ body {
   width: 30%;
   height: 70%;
 }
-.hostRoom {
+#hostRoom {
   font-size: 150%;
   border-radius: 30px;
   background-color: #151515;
