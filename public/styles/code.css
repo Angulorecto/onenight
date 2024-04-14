@@ -9,23 +9,10 @@ body {
   width: 30%;
   height: 70%;
 }
-#hostRoom {
-  font-size: 150%;
-  border-radius: 30px;
-  background-color: #151515;
-  color: #FFFFFF;
-  position: relative;
-  width: 70%;
-  height: 10%;
-  top: 10%;
-  left: 15%;
-  border: none;
-  font-family: 'wolf';
-}
-#joinForm {
+#checkCodeForm {
   height: 100%;
 }
-.joinLabel {
+.codeL {
   position: relative;
   left: 8%;
   top: 55%;
@@ -33,7 +20,7 @@ body {
   color: #FFFFFF;
   font-family: 'wolf';
 }
-.joinInput {
+#code {
   font-size: 150%;
   border-radius: 30px;
   background-color: #151515;
@@ -47,7 +34,7 @@ body {
   text-align: center;
   font-family: 'wolf';
 }
-.joinSubmit {
+.submit {
   font-size: 150%;
   border-radius: 30px;
   background-color: #151515;
@@ -59,4 +46,7 @@ body {
   left: 15%;
   border: none;
   font-family: 'wolf';
+}
+#resultMessage {
+    color: #FFFFFF;
 }
