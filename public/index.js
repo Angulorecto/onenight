@@ -96,6 +96,7 @@ function loadRoom() {
       event.preventDefault();
       const name = document.getElementById("name").value;
       socket.emit("name join", { code: getUrlParameter("code"), name: name });
+      nameForm.style.animation = "0.5 fadeOut forwards";
     });
 
     socket.on("room code", (roomCode) => {
