@@ -51,8 +51,12 @@ body {
   from {
     opacity: 100%;
   }
+  99.9% {
+    opacity: 0%;
+  }
   to {
     opacity: 0%;
+    display: none;
   }
 }
 @keyframes fadeIn {
