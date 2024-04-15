@@ -14,7 +14,7 @@ function loadHome() {
   e.onload = () => {
     const createRoomButton = document.getElementById("hostRoom");
     const joinForm = document.getElementById("joinForm");
-    const roomCodeInput = document.getElementById("roomCode");
+    const roomCodeInput = document.getElementById("code");
     const checkCodeForm = document.getElementById("checkCodeForm");
     const resultMessage = document.getElementById("resultMessage");
     const socket = io();
@@ -28,8 +28,8 @@ function loadHome() {
     if (joinForm) {
       joinForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        const roomCode = roomCodeInput.value;
-        socket.emit("join room", roomCode);
+        const roomCode = document.getElementById("code").value;
+        socket.emit("join room", { roomCode: btoa(btoa(btoa(btoa(btoa(btoa(roomCode)))))) });
       });
     }
 
@@ -47,6 +47,14 @@ function loadHome() {
       window.location.href = `/host?code=${roomCode}`;
     });
 
+    socket.on("joined room", (roomCode) => {
+      window.location.href = `/room?code=${roomCode}`;
+    });
+  
+    socket.on("room full", () => {
+      console.log("Room is full, please try joining another room.");
+    });
+
     // Listen for the disconnect event and emit it to the server
     window.addEventListener("beforeunload", () => {
       socket.emit("disconnect host");
@@ -57,11 +65,45 @@ function loadHome() {
 }
 
 function loadHost() {
-  // Get the value of the code parameter from the URL
   var hostRoomCode = getUrlParameter('code');
-  var coded = atob(atob(atob(atob(atob(atob(hostRoomCode))))));
-  // Update the element's innerHTML with the hostRoomCode value
-  document.getElementById("code").innerHTML = coded;
+  var decoded = atob(atob(atob(atob(atob(atob(hostRoomCode))))));
+  document.getElementById("code").innerHTML = decoded;
+  let e = document.createElement("script");
+  e.src = "https://cdn.socket.io/4.7.5/socket.io.min.js";
+  e.onload = () => {
+    const nameForm = document.getElementsByClassName("nameForm")[0];
+    const socket = io();
+
+    socket.on("make player", (data) => {
+      if (data.code == getUrlParameter("code")) {
+        const e = document.createElement("p");
+        e.innerHTML = data.name;
+        document.getElementsByClassName("players")[0].appendChild(e);
+      }
+    });
+  };
+
+  document.getElementsByTagName("head")[0].appendChild(e);
+}
+function loadRoom() {
+  let e = document.createElement("script");
+  e.src = "https://cdn.socket.io/4.7.5/socket.io.min.js";
+  e.onload = () => {
+    const nameForm = document.getElementsByClassName("nameForm")[0];
+    const socket = io();
+
+    nameForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const name = document.getElementById("name").value;
+      socket.emit("name join", { code: getUrlParameter("code"), name: name });
+    });
+
+    socket.on("room code", (roomCode) => {
+      window.location.href = `/host?code=${roomCode}`;
+    });
+  };
+
+  document.getElementsByTagName("head")[0].appendChild(e);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -69,5 +111,7 @@ document.addEventListener("DOMContentLoaded", function() {
     loadHome();
   } else if (window.location.pathname == "/host") {
     loadHost();
+  } else if (window.location.pathname == "/room") {
+    loadRoom();
   }
 });

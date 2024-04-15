@@ -4,6 +4,22 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const path = require('path');
 
+function encodeCode(code) {
+  let encoded = code.toString();
+  for (let i = 0; i < 6; i++) {
+    encoded = btoa(encoded);
+  }
+  return encoded;
+}
+
+function decodeCode(encoded) {
+  let decoded = encoded;
+  for (let i = 0; i < 6; i++) {
+    decoded = atob(decoded);
+  }
+  return parseInt(decoded);
+}
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get("/", (req, res) => {
@@ -12,6 +28,10 @@ app.get("/", (req, res) => {
 
 app.get("/code", (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'checkcode.html'));
+});
+
+app.get("/room", (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'room.html'));
 });
 
 app.get("/host", (req, res) => {
@@ -37,13 +57,17 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("join room", (roomCode) => {
-    if (globalRoomCodes.has(roomCode)) {
-      socket.join(roomCode);
-      socket.emit("joined room", roomCode);
-    } else {
-      socket.emit("invalid room code");
-    }
+  socket.on("join room", (data) => {
+    const roomCode = data.roomCode;
+    socket.emit("joined room", roomCode);
+  });
+
+  socket.on("room full", () => {
+    console.log("Room is full, please try joining another room.");
+  });
+
+  socket.on("make player", (data) => {
+    socket.emit("joined room", data);
   });
 });
 
@@ -63,22 +87,7 @@ function generateRoomCode() {
   }
 }
 
-function encodeCode(code) {
-  let encoded = code.toString();
-  for (let i = 0; i < 6; i++) {
-    encoded = btoa(encoded);
-  }
-  return encoded;
-}
-
-function decodeCode(encoded) {
-  let decoded = encoded;
-  for (let i = 0; i < 6; i++) {
-    decoded = atob(decoded);
-  }
-  return parseInt(decoded);
-} // Route to check if a code exists in the globalRoomCodes set
-
+// Route to check if a code exists in the globalRoomCodes set
 app.get("/check-code", (req, res) => {
   const code = parseInt(req.query.code);
   const encodedCode = encodeCode(code);
@@ -87,12 +96,6 @@ app.get("/check-code", (req, res) => {
   } else {
     res.send({ exists: false });
   }
-}); // Route to handle joining a room using a code
-
-app.get("/join-room", (req, res) => {
-  const roomCode = req.query.code;
-  io.emit("join room", roomCode);
-  res.send("Joining room...");
 });
 
 http.listen(3000, () => {
