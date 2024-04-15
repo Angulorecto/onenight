@@ -8,6 +8,13 @@ function getUrlParameter(name) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function loadSocket() {
+  let e = document.createElement("script");
+  e.src = "https://cdn.socket.io/4.7.5/socket.io.min.js";
+  document.getElementsByTagName("head")[0].appendChild(e);
+  return e;
+}
+
 function loadHome() {
   let e = document.createElement("script");
   e.src = "https://cdn.socket.io/4.7.5/socket.io.min.js";
