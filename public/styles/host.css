@@ -23,7 +23,7 @@ body {
     border: none;
     font-family: 'wolf';
 }
-.players {
+#players {
     display: flex;
     justify-content: space-between;
     align-items: center;

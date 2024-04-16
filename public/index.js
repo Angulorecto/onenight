@@ -21,7 +21,6 @@ function loadHome() {
   e.onload = () => {
     const createRoomButton = document.getElementById("hostRoom");
     const joinForm = document.getElementById("joinForm");
-    const roomCodeInput = document.getElementById("code");
     const checkCodeForm = document.getElementById("checkCodeForm");
     const resultMessage = document.getElementById("resultMessage");
     const socket = io();
@@ -78,32 +77,28 @@ function loadHost() {
   let e = document.createElement("script");
   e.src = "https://cdn.socket.io/4.7.5/socket.io.min.js";
   e.onload = () => {
-    const nameForm = document.getElementsByClassName("nameForm")[0];
     const socket = io();
 
     socket.on("make player", (data) => {
-      if (data.code == getUrlParameter("code")) {
-        const e = document.createElement("p");
-        e.innerHTML = data.name;
-        document.getElementsByClassName("players")[0].appendChild(e);
-      }
+      console.log("Caught! Data: " + JSON.stringify(data));
     });
   };
 
   document.getElementsByTagName("head")[0].appendChild(e);
 }
+
 function loadRoom() {
   let e = document.createElement("script");
   e.src = "https://cdn.socket.io/4.7.5/socket.io.min.js";
   e.onload = () => {
-    const nameForm = document.getElementsByClassName("nameForm")[0];
+    const nameForm = document.getElementById("nameForm");
     const socket = io();
 
     nameForm.addEventListener("submit", (event) => {
       event.preventDefault();
       const name = document.getElementById("name").value;
       socket.emit("name join", { code: getUrlParameter("code"), name: name });
-      nameForm.style.animation = "0.5 fadeOut forwards";
+      nameForm.style.animation = "fadeOut 0.5s forwards";
     });
 
     socket.on("room code", (roomCode) => {

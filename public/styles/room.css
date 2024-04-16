@@ -9,7 +9,7 @@ body {
   width: 30%;
   height: 70%;
 }
-.nameForm {
+#nameForm {
   height: 100%;
 }
 .nameLabel {
@@ -48,22 +48,22 @@ body {
   font-family: 'wolf';
 }
 @keyframes fadeOut {
-  from {
+  0% {
     opacity: 100%;
   }
   99.9% {
     opacity: 0%;
   }
-  to {
+  100% {
     opacity: 0%;
     display: none;
   }
 }
 @keyframes fadeIn {
-  from {
+  0% {
     opacity: 0%;
   }
-  to {
+  100% {
     opacity: 100%;
   }
 }

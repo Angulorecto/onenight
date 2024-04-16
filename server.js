@@ -60,14 +60,24 @@ io.on("connection", (socket) => {
   socket.on("join room", (data) => {
     const roomCode = data.roomCode;
     socket.emit("joined room", roomCode);
+    console.log("Join room recieved, joined room sent");
   });
 
   socket.on("room full", () => {
     console.log("Room is full, please try joining another room.");
   });
 
-  socket.on("make player", (data) => {
-    socket.emit("joined room", data);
+  socket.on("name join", (data) => {
+    socket.emit("make player", data);
+    console.log("Name join received with this data: " + JSON.stringify(data) + ", make player sent");
+  });
+  
+  socket.on("player confo2", (data) => {
+    console.log("Make player executed with this data: " + JSON.stringify(data));
+  });
+  
+  socket.on("player confo1", (data) => {
+    console.log("Make player confirmed with this data: " + JSON.stringify(data));
   });
 });
 
