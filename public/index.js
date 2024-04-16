@@ -28,7 +28,7 @@ function loadHome() {
       joinForm.addEventListener("submit", (event) => {
         event.preventDefault();
         const roomCode = document.getElementById("code").value;
-        socket.emit("join room", { roomCode: encodeCode(roomCode) });
+        socket.emit("join room", { roomCode: global.encodeCode(roomCode) });
       });
     }
 
