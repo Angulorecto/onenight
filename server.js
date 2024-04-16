@@ -29,8 +29,8 @@ const globalRoomCodes = new Set();
 io.on("connection", (socket) => {
   socket.on("create room", () => {
     const roomCode = generateRoomCode();
-    globalRoomCodes.add(encodeCode(roomCode));
-    socket.emit("room code", encodeCode(roomCode));
+    globalRoomCodes.add(global.encodeCode(roomCode));
+    socket.emit("room code", global.encodeCode(roomCode));
   });
 
   socket.on("disconnect host", () => {
@@ -65,13 +65,13 @@ function generateRoomCode() {
   let roomCode;
   for (let i = 0; i < 3; i++) {
     roomCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit room code
-    if (!globalRoomCodes.has(encodeCode(roomCode))) {
+    if (!globalRoomCodes.has(global.encodeCode(roomCode))) {
       return roomCode;
     }
   } // If re-rolling fails 3 times, increase code length by 1 digit
   for (let i = 0; i < 3; i++) {
     roomCode = Math.floor(1000000 + Math.random() * 9000000); // Generate 7-digit room code
-    if (!globalRoomCodes.has(encodeCode(roomCode))) {
+    if (!globalRoomCodes.has(global.encodeCode(roomCode))) {
       return roomCode;
     }
   }
@@ -80,7 +80,7 @@ function generateRoomCode() {
 // Route to check if a code exists in the globalRoomCodes set
 app.get("/check-code", (req, res) => {
   const code = parseInt(req.query.code);
-  const encodedCode = encodeCode(code);
+  const encodedCode = global.encodeCode(code);
   if (globalRoomCodes.has(encodedCode)) {
     res.send({ exists: true });
   } else {
