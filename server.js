@@ -1,24 +1,9 @@
+import global from './config.js'
 const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const path = require('path');
-
-function encodeCode(code) {
-  let encoded = code.toString();
-  for (let i = 0; i < 6; i++) {
-    encoded = btoa(encoded);
-  }
-  return encoded;
-}
-
-function decodeCode(encoded) {
-  let decoded = encoded;
-  for (let i = 0; i < 6; i++) {
-    decoded = atob(decoded);
-  }
-  return parseInt(decoded);
-}
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -65,11 +50,6 @@ io.on("connection", (socket) => {
 
   socket.on("room full", () => {
     console.log("Room is full, please try joining another room.");
-  });
-
-  socket.on("name join", (data) => {
-    socket.emit("make player", data);
-    console.log("Name join received with this data: " + JSON.stringify(data) + ", make player sent");
   });
   
   socket.on("player confo2", (data) => {
