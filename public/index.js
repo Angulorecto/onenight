@@ -1,4 +1,4 @@
-import { encodeCode, decodeCode, getUrlParameter } from './config.js';
+import global from './config.js';
 // Function to get the value of a URL parameter by name
 
 function loadSocket() {
