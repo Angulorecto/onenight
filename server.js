@@ -5,7 +5,7 @@ import http from 'http';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
-import { encodeCode, decodeCode, getUrlParameter } from './public/config.js';
+import { encodeCode, decodeCode, getUrlParameter } from './public/js/config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
