@@ -1,9 +1,18 @@
-const { encodeCode, decodeCode, getUrlParameter } = require('./config');
-const express = require("express");
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import express from 'express';
+import http from 'http';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import path from 'path';
+import { encodeCode, decodeCode, getUrlParameter } from './public/config.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
-const path = require('path');
+const server = createServer(app);
+const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -29,8 +38,8 @@ const globalRoomCodes = new Set();
 io.on("connection", (socket) => {
   socket.on("create room", () => {
     const roomCode = generateRoomCode();
-    globalRoomCodes.add(config.encodeCode(roomCode));
-    socket.emit("room code", config.encodeCode(roomCode));
+    globalRoomCodes.add(encodeCode(roomCode));
+    socket.emit("room code", encodeCode(roomCode));
   });
 
   socket.on("disconnect host", () => {
@@ -51,27 +60,19 @@ io.on("connection", (socket) => {
   socket.on("room full", () => {
     console.log("Room is full, please try joining another room.");
   });
-  
-  socket.on("player confo2", (data) => {
-    console.log("Make player executed with this data: " + JSON.stringify(data));
-  });
-  
-  socket.on("player confo1", (data) => {
-    console.log("Make player confirmed with this data: " + JSON.stringify(data));
-  });
 });
 
 function generateRoomCode() {
   let roomCode;
   for (let i = 0; i < 3; i++) {
     roomCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit room code
-    if (!globalRoomCodes.has(config.encodeCode(roomCode))) {
+    if (!globalRoomCodes.has(encodeCode(roomCode))) {
       return roomCode;
     }
   } // If re-rolling fails 3 times, increase code length by 1 digit
   for (let i = 0; i < 3; i++) {
     roomCode = Math.floor(1000000 + Math.random() * 9000000); // Generate 7-digit room code
-    if (!globalRoomCodes.has(config.encodeCode(roomCode))) {
+    if (!globalRoomCodes.has(encodeCode(roomCode))) {
       return roomCode;
     }
   }
@@ -80,7 +81,7 @@ function generateRoomCode() {
 // Route to check if a code exists in the globalRoomCodes set
 app.get("/check-code", (req, res) => {
   const code = parseInt(req.query.code);
-  const encodedCode = config.encodeCode(code);
+  const encodedCode = encodeCode(code);
   if (globalRoomCodes.has(encodedCode)) {
     res.send({ exists: true });
   } else {
@@ -88,6 +89,6 @@ app.get("/check-code", (req, res) => {
   }
 });
 
-http.listen(3000, () => {
+server.listen(3000, () => {
   console.log("Server running on port 3000");
 });

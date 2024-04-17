@@ -1,6 +1,6 @@
 const encode = 6;
 
-const encodeCode = function(code) {
+export const encodeCode = function(code) {
   let encoded = code.toString();
   for (let i = 0; i < encode; i++) {
       encoded = btoa(encoded);
@@ -8,7 +8,7 @@ const encodeCode = function(code) {
   return encoded;
 };
 
-const decodeCode = function(encoded) {
+export const decodeCode = function(encoded) {
   let decoded = encoded;
   for (let i = 0; i < encode; i++) {
       decoded = atob(decoded);
@@ -16,7 +16,7 @@ const decodeCode = function(encoded) {
   return parseInt(decoded);
 };
 
-const getUrlParameter = function(name) {
+export const getUrlParameter = function(name) {
   if (typeof window !== 'undefined') {
       name = name.replace(/[\[\]]/g, "\\$&");
       var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
@@ -28,5 +28,3 @@ const getUrlParameter = function(name) {
       throw new Error('getUrlParameter is only supported in a browser environment');
   }
 };
-
-module.exports = { encodeCode, decodeCode, getUrlParameter };
