@@ -1,4 +1,4 @@
-import global from './config.js';
+import { encodeCode, decodeCode, getUrlParameter } from './config.js';
 // Function to get the value of a URL parameter by name
 
 function loadSocket() {
@@ -28,7 +28,7 @@ function loadHome() {
       joinForm.addEventListener("submit", (event) => {
         event.preventDefault();
         const roomCode = document.getElementById("code").value;
-        socket.emit("join room", { roomCode: global.encodeCode(roomCode) });
+        socket.emit("join room", { roomCode: encodeCode(roomCode) });
       });
     }
 
