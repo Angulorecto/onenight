@@ -5,7 +5,9 @@ import http from 'http';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
-import { encodeCode, decodeCode, getUrlParameter } from './public/js/config.js';
+import { encodeCode, decodeCode, getUrlParameter } from './public/js/global.js';
+import stuffs from './public/js/config.js';
+import { config } from 'process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -64,13 +66,13 @@ io.on("connection", (socket) => {
 
 function generateRoomCode() {
   let roomCode;
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < stuffs.reroll; i++) {
     roomCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit room code
     if (!globalRoomCodes.has(encodeCode(roomCode))) {
       return roomCode;
     }
   } // If re-rolling fails 3 times, increase code length by 1 digit
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < stuffs.reroll; i++) {
     roomCode = Math.floor(1000000 + Math.random() * 9000000); // Generate 7-digit room code
     if (!globalRoomCodes.has(encodeCode(roomCode))) {
       return roomCode;

@@ -1,4 +1,5 @@
-import { encodeCode, decodeCode, getUrlParameter } from './config.js';
+import { encodeCode, decodeCode, getUrlParameter } from './global.js';
+import stuffs from './config.js';
 // Function to get the value of a URL parameter by name
 
 function loadSocket() {
@@ -9,8 +10,7 @@ function loadSocket() {
 }
 
 function loadHome() {
-  let e = document.createElement("script");
-  e.src = "https://cdn.socket.io/4.7.5/socket.io.min.js";
+  let e = loadSocket();
   e.onload = () => {
     const createRoomButton = document.getElementById("hostRoom");
     const joinForm = document.getElementById("joinForm");
@@ -67,8 +67,7 @@ function loadHost() {
   var hostRoomCode = getUrlParameter('code');
   var decoded = decodeCode(hostRoomCode);
   document.getElementById("code").innerHTML = decoded;
-  let e = document.createElement("script");
-  e.src = "https://cdn.socket.io/4.7.5/socket.io.min.js";
+  let e = loadSocket();
   e.onload = () => {
     const socket = io();
 
@@ -81,8 +80,7 @@ function loadHost() {
 }
 
 function loadRoom() {
-  let e = document.createElement("script");
-  e.src = "https://cdn.socket.io/4.7.5/socket.io.min.js";
+  let e = loadSocket();
   e.onload = () => {
     const nameForm = document.getElementById("nameForm");
     const socket = io();
