@@ -16,7 +16,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: 0 }));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -56,7 +56,13 @@ io.on("connection", (socket) => {
   socket.on("join room", (data) => {
     const roomCode = data.roomCode;
     socket.emit("joined room", roomCode);
-    console.log("Join room recieved, joined room sent");
+    console.log("Join room recieved with code: " + roomCode + ", joined room sent");
+  });
+
+  socket.on("name join", (data) => {
+    console.log(data);
+    socket.emit("make player", { code: data.code, name: data.name });
+    console.log("Emitted make player event");
   });
 
   socket.on("room full", () => {

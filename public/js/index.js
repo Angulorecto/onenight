@@ -59,24 +59,25 @@ function loadHome() {
       socket.emit("disconnect host");
     });
   };
-
-  document.getElementsByTagName("head")[0].appendChild(e);
 }
 
 function loadHost() {
-  var hostRoomCode = getUrlParameter('code');
-  var decoded = decodeCode(hostRoomCode);
-  document.getElementById("code").innerHTML = decoded;
   let e = loadSocket();
   e.onload = () => {
+    const hostRoomCode = getUrlParameter('code');
+    const decoded = decodeCode(hostRoomCode);
+    document.getElementById("code").innerHTML = decoded;
+    const start = document.getElementsByClassName("startGame")[0];
     const socket = io();
 
-    socket.on("name join", (data) => {
-      console.log("Caught! Data: " + JSON.stringify(data));
+    socket.on("make player", (data) => {
+      start.style.backgroundColor = 'rgb(255, 0, 0)';
+    });
+
+    start.addEventListener("click", function() {
+      start.style.backgroundColor = '#FF0000';
     });
   };
-
-  document.getElementsByTagName("head")[0].appendChild(e);
 }
 
 function loadRoom() {
@@ -91,13 +92,7 @@ function loadRoom() {
       socket.emit("name join", { code: getUrlParameter("code"), name: name });
       nameForm.style.animation = "fadeOut 0.5s forwards";
     });
-
-    socket.on("room code", (roomCode) => {
-      window.location.href = `/host?code=${roomCode}`;
-    });
   };
-
-  document.getElementsByTagName("head")[0].appendChild(e);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
